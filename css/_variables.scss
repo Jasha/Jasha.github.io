@@ -1,0 +1,26 @@
+$black-color: #000000;
+$black-transparent-color: rgba(0, 0, 0, 0.4);
+$blue-color: #0000FF;
+$blue-light-color: #007FFF;
+$red-color: #FF0000;
+$red-light-color: #FF7F00;
+$white-color: #FFFFFF;
+
+$title-background-color: $black-transparent-color;
+
+$font-main: segoeuil;
+$font-icons: icons;
+
+$font-icons-back: "\e967";
+$font-icons-play: "\e919";
+$font-icons-root: "\e929";
+
+$main-planet-size: 120px;
+$main-planet-border-width: 4px;
+$main-planet-border-color: $red-light-color;
+$main-planet-shadow-color: rgba(255, 0, 0, 0.75);
+
+$satellite-border-color: $blue-light-color;
+$satellite-shadow-color: rgba(0, 0, 255, 0.75);
+
+$play-icon-size: 40px;

@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Universe navigator</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  
+  <link rel="stylesheet" href="css/site.css" type="text/css">
+</head>
+<body onload="loadInitialData();">
+
+  <div class="universe-navigator">
+	<div class="title-bar">
+		<div id="navigator-title" class="main-title"></div>
+	</div>
+	<div class="main-block">
+		<div class="planets-block">
+			<div id="planets-space" class="planets-space">
+				<div id="main-planet" class="main-planet"></div>
+			</div>
+		</div>
+	</div>
+	<div class="path-bar">
+		<div class="root-block"></div>
+		<div id="navigator-path" class="path-block"></div>
+		<div class="back-block" onclick="goBack();"></div>
+	</div>
+  </div>
+  
+  <script type="text/javascript" src="js/test-data.js"></script>
+	<script type="text/javascript" src="js/helper.js"></script>
+  <script type="text/javascript" src="js/universe.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+@charset "UTF-8";
+@font-face {
+  font-family: icons;
+  src: url(../fonts/icomoon.ttf); }
+@font-face {
+  font-family: segoeuil;
+  src: url(../fonts/segoeuil.ttf); }
+body {
+  margin: 0; }
+
+* {
+  -webkit-tap-highlight-color: transparent; }
+
+.universe-navigator {
+  background: url("../images/universe.jpg") no-repeat;
+  background-position: center;
+  background-size: cover;
+  overflow: hidden; }
+  .universe-navigator .title-block, .universe-navigator .title-bar .main-title, .universe-navigator .planet .planet-title, .universe-navigator .main-planet .planet-title, .universe-navigator .satellite .planet-title {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: segoeuil;
+    margin: 0 auto; }
+  .universe-navigator .title-bar {
+    padding-top: 10px;
+    text-align: center; }
+    .universe-navigator .title-bar .main-title {
+      font-size: 24px;
+      padding: 5px; }
+  .universe-navigator .main-block {
+    height: 460px;
+    padding-top: 30px;
+    position: relative; }
+    .universe-navigator .main-block > div {
+      display: inline-block;
+      vertical-align: middle; }
+  .universe-navigator .planets-block {
+    height: 100%;
+    position: relative;
+    width: 100%; }
+    .universe-navigator .planets-block .planets-space {
+      height: 100%;
+      position: absolute;
+      width: 100%; }
+      .universe-navigator .planets-block .planets-space div {
+        display: inline-block; }
+  .universe-navigator .play-icon {
+    opacity: 0;
+    position: absolute;
+    transition: opacity 0.2s ease; }
+    .universe-navigator .play-icon::before {
+      color: #FF0000;
+      content: "";
+      font-family: icons; }
+    .universe-navigator .play-icon.playing {
+      opacity: 1;
+      transition: opacity 0.2s ease; }
+  .universe-navigator .planet, .universe-navigator .main-planet, .universe-navigator .satellite {
+    background-color: #000000;
+    border-radius: 50%;
+    cursor: pointer; }
+    .universe-navigator .planet .planet-title, .universe-navigator .main-planet .planet-title, .universe-navigator .satellite .planet-title {
+      bottom: -16px;
+      font-size: 18px;
+      left: -13px;
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+      text-overflow: ellipsis;
+      transition: opacity 0.5s ease;
+      white-space: nowrap;
+      width: 80px;
+      z-index: 1; }
+  .universe-navigator .main-planet {
+    animation: main-planet-animation 3s linear infinite;
+    border: 4px solid #FF7F00;
+    box-sizing: border-box;
+    cursor: default;
+    height: 120px;
+    left: calc(50% - 60px);
+    position: absolute;
+    top: calc(50% - 60px);
+    transition: left 0.5s linear, top 0.5s linear;
+    width: 120px; }
+    .universe-navigator .main-planet .planet-title {
+      left: calc(50% - 40px);
+      top: calc(50% - 12px); }
+    .universe-navigator .main-planet.hidden {
+      animation: none !important;
+      background-color: transparent !important;
+      border-color: transparent !important; }
+  .universe-navigator .satellite {
+    animation: satellite-animation 3s linear infinite;
+    border: 2px solid #007FFF;
+    box-sizing: border-box;
+    height: 60px;
+    left: calc(50% - 30px);
+    position: absolute;
+    top: calc(50% - 30px);
+    transition: all 0.3s linear;
+    width: 60px; }
+    .universe-navigator .satellite .planet-title {
+      bottom: -76px;
+      left: -13px;
+      transition: opacity 0.3s linear; }
+    .universe-navigator .satellite.hidden {
+      opacity: 0; }
+    .universe-navigator .satellite > .play-icon {
+      bottom: 18px;
+      height: 20px;
+      left: 20px;
+      width: 20px; }
+      .universe-navigator .satellite > .play-icon::before {
+        font-size: 20px; }
+  .universe-navigator .path-bar {
+    cursor: pointer;
+    padding: 10px; }
+    .universe-navigator .path-bar > div {
+      display: inline-block;
+      vertical-align: middle; }
+    .universe-navigator .path-bar .block, .universe-navigator .path-bar .root-block, .universe-navigator .path-bar .back-block {
+      height: 40px;
+      padding: 5px;
+      width: 40px; }
+      .universe-navigator .path-bar .block::before, .universe-navigator .path-bar .root-block::before, .universe-navigator .path-bar .back-block::before {
+        color: #FFFFFF;
+        font-family: icons;
+        font-size: 40px; }
+    .universe-navigator .path-bar .root-block::before {
+      content: ""; }
+    .universe-navigator .path-bar .back-block::before {
+      content: ""; }
+    .universe-navigator .path-bar .path-block {
+      color: #FFFFFF;
+      font-family: segoeuil;
+      font-size: 16px;
+      margin: 0 15px;
+      width: calc(100% - 150px); }
+
+/* ANIMATIONS */
+@keyframes main-planet-animation {
+  0% {
+    box-shadow: 0px -5px 30px 10px rgba(255, 0, 0, 0.75), inset 0px 0px 30px 5px rgba(255, 0, 0, 0.75); }
+  25% {
+    box-shadow: 5px 0px 30px 10px rgba(255, 0, 0, 0.75), inset 0px 0px 30px 5px rgba(255, 0, 0, 0.75); }
+  50% {
+    box-shadow: 0px 5px 30px 10px rgba(255, 0, 0, 0.75), inset 0px 0px 30px 5px rgba(255, 0, 0, 0.75); }
+  75% {
+    box-shadow: -5px 0px 30px 10px rgba(255, 0, 0, 0.75), inset 0px 0px 30px 5px rgba(255, 0, 0, 0.75); }
+  100% {
+    box-shadow: 0px -5px 30px 10px rgba(255, 0, 0, 0.75), inset 0px 0px 30px 5px rgba(255, 0, 0, 0.75); } }
+@keyframes satellite-animation {
+  0% {
+    box-shadow: 0px -3px 30px 8px rgba(0, 0, 255, 0.75), inset 0px 0px 30px 4px rgba(0, 0, 255, 0.75); }
+  25% {
+    box-shadow: 3px 0px 30px 8px rgba(0, 0, 255, 0.75), inset 0px 0px 30px 4px rgba(0, 0, 255, 0.75); }
+  50% {
+    box-shadow: 0px 3px 30px 8px rgba(0, 0, 255, 0.75), inset 0px 0px 30px 4px rgba(0, 0, 255, 0.75); }
+  75% {
+    box-shadow: -3px 0px 30px 8px rgba(0, 0, 255, 0.75), inset 0px 0px 30px 4px rgba(0, 0, 255, 0.75); }
+  100% {
+    box-shadow: 0px -3px 30px 8px rgba(0, 0, 255, 0.75), inset 0px 0px 30px 4px rgba(0, 0, 255, 0.75); } }
+
+/*# sourceMappingURL=site.css.map */

@@ -1,0 +1,237 @@
+.universe-navigator {
+	background: url("../images/universe.jpg") no-repeat;
+	background-position: center;
+	background-size: cover;
+	overflow: hidden;
+
+	.title-block {
+		background-color: $title-background-color;
+		border-radius: 4px;
+		color: $white-color;
+		cursor: pointer;
+		display: inline-block;
+		font-family: $font-main;
+		margin: 0 auto;
+	}
+
+	.title-bar {
+		padding-top: 10px;
+		text-align: center;
+
+		.main-title {
+			@extend .title-block;
+			font-size: 24px;
+			padding: 5px;
+		}
+	}
+
+	.main-block {
+		height: 460px;
+		padding-top: 30px;
+		position: relative;
+
+		& > div {
+			display: inline-block;
+			vertical-align: middle;
+		}
+	}
+
+	.planets-block {
+		height: 100%;
+		position: relative;
+		width: 100%;
+
+		.planets-space {
+			height: 100%;
+			position: absolute;
+			width: 100%;
+
+			& div {
+				display: inline-block;
+			}
+		}
+	}
+
+	.play-icon {
+		opacity: 0;
+		position: absolute;
+		transition: opacity 0.2s ease;
+
+		&::before {
+			color: $red-color;
+		    content: $font-icons-play;
+			font-family: $font-icons;
+		}
+
+		&.playing {
+			opacity: 1;
+			transition: opacity 0.2s ease;
+		}
+	}
+
+	.planet {
+		background-color: $black-color;
+		border-radius: 50%;
+		cursor: pointer;
+
+		.planet-title {
+			@extend .title-block;
+			bottom: -16px;
+			font-size: 18px;
+			left: -13px;
+			margin: 0 auto;
+			overflow: hidden;
+			position: relative;
+			text-align: center;
+			text-overflow: ellipsis;
+			transition: opacity 0.5s ease;
+			white-space: nowrap; 
+			width: 80px;
+			z-index: 1;
+		}
+	}
+
+	.main-planet {
+		@extend .planet;
+		animation: main-planet-animation 3s linear infinite;
+		border: $main-planet-border-width solid $main-planet-border-color;
+		box-sizing: border-box;
+		cursor: default;
+		height: $main-planet-size;
+		left: calc(50% - #{($main-planet-size / 2)});
+		position: absolute;
+		top: calc(50% - #{($main-planet-size / 2)});
+		transition: left 0.5s linear, top 0.5s linear;
+		width: $main-planet-size;
+
+		.planet-title {
+			left: calc(50% - 40px);
+			top: calc(50% - 12px);
+		}
+
+		&.hidden {
+			animation: none !important;
+			background-color: transparent !important;
+			border-color: transparent !important;
+		}
+	}
+
+	.satellite {
+		@extend .planet;
+		animation: satellite-animation 3s linear infinite;
+		border: $main-planet-border-width / 2 solid $satellite-border-color;
+		box-sizing: border-box;
+		height: $main-planet-size / 2;
+		left: calc(50% - #{($main-planet-size / 4)});
+		position: absolute;
+		top: calc(50% - #{($main-planet-size / 4)});
+		transition: all 0.3s linear;
+		width: $main-planet-size / 2;
+
+		.planet-title {
+			bottom: -76px;
+			left: -13px;
+			transition: opacity 0.3s linear;
+		}
+
+		&.hidden {
+			opacity: 0;
+		}
+
+		&  > .play-icon {
+			bottom: 18px;
+			height: $play-icon-size / 2;
+		    left: 20px;
+		    width: $play-icon-size / 2;
+
+		    &::before {
+				font-size: $play-icon-size / 2;
+			}
+		}
+	}
+
+	.path-bar {
+		cursor: pointer;
+		padding: 10px;
+
+		& > div {
+			display: inline-block;
+			vertical-align: middle;
+		}
+
+		.block {
+			height: 40px;
+			padding: 5px;
+			width: 40px;
+
+			&::before {
+				color: $white-color;
+				font-family: icons;
+			    font-size: 40px;
+			}
+		}
+
+		.root-block {
+			@extend .block;
+
+			&::before {
+			    content: $font-icons-root;
+			}
+		}
+
+		.back-block {
+			@extend .block;
+
+			&::before {
+			    content: $font-icons-back;
+			}
+		}
+
+		.path-block {
+			color: #FFFFFF;
+			font-family: segoeuil;
+			font-size: 16px;
+			margin: 0 15px;
+			width: calc(100% - 150px);
+		}
+	}
+}
+
+
+/* ANIMATIONS */
+
+@keyframes main-planet-animation {
+  	0% {
+    	box-shadow: 0px -5px 30px 10px $main-planet-shadow-color, inset 0px 0px 30px 5px $main-planet-shadow-color;
+  	}
+  	25% {
+    	box-shadow: 5px 0px 30px 10px $main-planet-shadow-color, inset 0px 0px 30px 5px $main-planet-shadow-color;
+  	}
+  	50% {
+    	box-shadow: 0px 5px 30px 10px $main-planet-shadow-color, inset 0px 0px 30px 5px $main-planet-shadow-color;
+  	}
+  	75% {
+    	box-shadow: -5px 0px 30px 10px $main-planet-shadow-color, inset 0px 0px 30px 5px $main-planet-shadow-color;
+  	}
+  	100% {
+    	box-shadow: 0px -5px 30px 10px $main-planet-shadow-color, inset 0px 0px 30px 5px $main-planet-shadow-color;
+  	}
+}
+
+@keyframes satellite-animation {
+  	0% {
+    	box-shadow: 0px -3px 30px 8px $satellite-shadow-color, inset 0px 0px 30px 4px $satellite-shadow-color;
+  	}
+  	25% {
+    	box-shadow: 3px 0px 30px 8px $satellite-shadow-color, inset 0px 0px 30px 4px $satellite-shadow-color;
+  	}
+  	50% {
+    	box-shadow: 0px 3px 30px 8px $satellite-shadow-color, inset 0px 0px 30px 4px $satellite-shadow-color;
+  	}
+  	75% {
+    	box-shadow: -3px 0px 30px 8px $satellite-shadow-color, inset 0px 0px 30px 4px $satellite-shadow-color;
+  	}
+  	100% {
+    	box-shadow: 0px -3px 30px 8px $satellite-shadow-color, inset 0px 0px 30px 4px $satellite-shadow-color;
+  	}
+}
