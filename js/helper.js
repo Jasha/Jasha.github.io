@@ -25,15 +25,17 @@ function getElementPosition(planet) {
 	return { x: elementInfo.left, y: elementInfo.top };
 };
 
-function getScaleLevelFromStyle(style) {
-	let scaleLevelText = style.match(/scale\(.*\)/)[0];
-	
-	let start = scaleLevelText.indexOf('(');
-	let end = scaleLevelText.indexOf(')');
-	
-	let scaleLevel = scaleLevelText.substr(start + 1, end - start - 1);
+function getAttributeFromTranformStyle(style, attribute, additionalChars = 0) {
+    let regExp = new RegExp("" + attribute + "\(.*\)");
 
-	return scaleLevel;
+	let text = style.match(regExp)[0];
+	
+	let start = text.indexOf('(');
+	let end = text.indexOf(')');
+	
+	let value = text.substr(start + 1, end - start - 1 - additionalChars);
+
+	return value;
 };
 
 function detectSwipe(element, callback) {
@@ -41,7 +43,7 @@ function detectSwipe(element, callback) {
     swipeData.startX = 0; swipeData.startY = 0; swipeData.endX = 0; swipeData.endY = 0; swipeData.startTime = 0; swipeData.endTime = 0;
     
     let min_x = 10;  // min x swipe for horizontal swipe
-    let max_x = 10;  // max x difference for vertical swipe
+    let max_x = 30;  // max x difference for vertical swipe
     let min_y = 50;  // min y swipe for vertical swipe
     let max_y = 60;  // max y difference for horizontal swipe
     

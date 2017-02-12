@@ -2,8 +2,9 @@
 
 const doubleClickTimeout = 300;
 const rotationTimeout = 200;
-const maxScaleLevelForTitle = 0.8;
 
+let selectedPlanetData = null;
+let selectedIndex = null;
 let wheelDeltaForward = null;
 let wheelDeltaBackward = null;
 let clicks = 0;
@@ -12,6 +13,7 @@ let satellitesStyleArray = [];
 let totalStepsToMove = 0;
 let currentlyRotating = false;
 let rotationInQ = 0;
+let scaleLevelForTitle = 0.8;
 
 function loadInitialData() {
 	setInitialData(testData2);
@@ -83,11 +85,15 @@ function rotateSatellites(direction) {
 };
 
 function shiftArrayLeft() {
+	selectedIndex--;
+
 	let firstElement = satellitesStyleArray.shift();
 	satellitesStyleArray.push(firstElement);
 };
 
 function shiftArrayRight() {
+	selectedIndex++;
+
 	let lastElement = satellitesStyleArray.pop();
 	satellitesStyleArray.unshift(lastElement);
 };
@@ -97,16 +103,24 @@ function updateSatellitesStyle(transitionDuration = 0.2) {
 
 	for (let i = 0; i < satellitesElements.length; i++) {
 		satellitesElements[i].style = satellitesStyleArray[i] + ' transition: all ' + transitionDuration + 's linear;';
-		satellitesElements[i].firstChild.style = 'opacity: ' + (getScaleLevelFromStyle(satellitesStyleArray[i]) < maxScaleLevelForTitle ? '0' : '1') + ';';
+		satellitesElements[i].firstChild.style = 'opacity: ' + (getAttributeFromTranformStyle(satellitesStyleArray[i], 'scale') < scaleLevelForTitle ? '0' : '1') + ';';
 	}
-}
+};
 
 function goBack() {
 	// TODO: GO BACK
 };
 
 function displayPlanets(data) {
+	selectedPlanetData = data;
+	selectedIndex = 0;
+
 	let satellitesElements = getSatellites(data);
+
+	let oldSatellitesElements = document.getElementsByClassName('satellite');
+	while (oldSatellitesElements[0]) {
+		oldSatellitesElements[0].parentNode.removeChild(oldSatellitesElements[0]);	
+	}
 
 	let planetsSpaceElement = document.getElementById('planets-space');
 	for (let i = 0; i < satellitesElements.length; i++) {
@@ -125,8 +139,6 @@ function displayPlanets(data) {
 };
 
 function getSatellites(data) {
-	const minScaleLevel = 0.4;
-	
 	let satellitesElements = [];
 	let childrenData = data.children;
 	let numberOfSatellites = childrenData ? childrenData.length : 0;
@@ -137,20 +149,25 @@ function getSatellites(data) {
 	let angleStep = 360 / numberOfSatellites;
 	let scaleLevel = getScaleLevel(numberOfSatellites);
 	let maxScaleLevel = scaleLevel;
+	let minScaleLevel = maxScaleLevel < 1 ? 0.4 - (1 - maxScaleLevel) < 0.1 ? 0.1 : 0.4 - (1 - maxScaleLevel) : 0.4;
 	let scaleStep = (maxScaleLevel - minScaleLevel) / (numberOfSatellites / 2);
+
+	scaleLevelForTitle = maxScaleLevel < 1 ? maxScaleLevel - 0.1 : 0.8;
 	
 	let mainPlanetElement = document.getElementById('main-planet');
 	mainPlanetElement.style.zIndex = parseInt(zIndex / 2) + 1;
 	let center = getCenterOfElement(mainPlanetElement);
 	
 	let positionOfNextSatellite = { x: 0, y: 0 };
+
+	satellitesStyleArray = [];
 	
 	for (let i = 0; i < numberOfSatellites; i++) {
 		positionOfNextSatellite = calculateNewPosition(angleForSatellite, center);
 		
 		let satelliteStyle = 'z-index: ' + zIndex + '; cursor: ' + (i === 0 ? 'pointer' : 'default') + '; ' +
 			'transform: translateX(' + (positionOfNextSatellite.x - center.x) + 'px) translateY(' + (positionOfNextSatellite.y - center.y) + 'px) scale(' + scaleLevel + ');';
-		let satelliteTitleStyle = 'opacity: ' + (scaleLevel < maxScaleLevelForTitle ? '0' : '1') + ';';
+		let satelliteTitleStyle = 'opacity: ' + (scaleLevel < scaleLevelForTitle ? '0' : '1') + ';';
 
 		satellitesStyleArray.push(satelliteStyle);
 
@@ -222,21 +239,62 @@ function onSatelliteClick(event, planetIndex, data) {
 	clicks++;
 
 	setTimeout(function() {
+		// only front satellite could be playable and activable 
+		if (planetIndex !== selectedIndex) clicks = 0;
+
 		if (clicks === 1) {
-			// TODO: ONLY MIDDLE FRONT PLANET SHOULD BE PLAYABLE
 			setSatellitePlay(planetIndex, data.children[planetIndex].Id, event);
 		} else if (clicks === 2) {
-			// TODO: SET SATELLITE ACTIVE
+			setSatelliteActive(data.children[planetIndex], planetIndex);
 		}
 
 		clicks = 0;
 	}, doubleClickTimeout);
 };
 
-function setSatellitePlay(index, id, clickEvent) {
-	let satelliteScaleLevel = getScaleLevelFromStyle(JSON.stringify(document.getElementsByClassName('satellite')[index].style));
-	if (satelliteScaleLevel !== '1') return;
+function setSatelliteActive(data, index) {
+	let satelliteElement = document.getElementsByClassName('satellite')[index];
+	satelliteElement.getElementsByClassName('planet-title')[0].style = 'transition: all 0.3s linear; transform: translateY(-60px) scale(0.5);';
+	satelliteElement.getElementsByClassName('play-icon')[0].style.opacity = 0;
 
+	animateNavigationToSatellite(index);
+
+	setTimeout(function() {
+		let mainPlanetElement = document.getElementById('main-planet');
+		mainPlanetElement.style = '';
+		mainPlanetElement.classList.toggle('hidden');
+
+		displayPlanets(data);
+		
+		appendPath(data);
+	}, 490);
+};
+
+function animateNavigationToSatellite(index) {
+	let mainPlanetElement = document.getElementById('main-planet');
+	let satellitesElements = document.getElementsByClassName('satellite');
+
+	mainPlanetElement.style = 'transition: all 0.5s linear; transform: translateY(-80px) scale(0.2); opacity: 0;';
+	mainPlanetElement.className += ' hidden';
+
+	for (let i = 0; i < satellitesElements.length; i++) {
+		let satelliteTransform = satellitesElements[i].style.transform;
+
+		if (i === index) {
+			satellitesElements[i].style.transform = satelliteTransform.replace(/translateY\(.*\)/g, 'translateY(0px)') + ' scale(2)';
+		} else {
+			let currentTranlateY = getAttributeFromTranformStyle(satelliteTransform, 'translateY', 2);
+			let currentTranlateX = getAttributeFromTranformStyle(satelliteTransform, 'translateX', 2);
+			let currentScaleLevel = getAttributeFromTranformStyle(satelliteTransform, 'scale');
+			
+			satellitesElements[i].className += ' hidden';
+			satellitesElements[i].style.transform = satelliteTransform.replace(/translateX\(.*\)/g, 'translateX(' + (currentTranlateX * 2 / 3) + 'px)') +
+			 ' translateY(' + (currentTranlateY - 40) + 'px) scale(' + (currentScaleLevel - 0.3) + ')';
+		}		
+	}
+};
+
+function setSatellitePlay(index, id, clickEvent) {
 	let currentActiveElement = document.querySelector('.play-icon.playing');
 
 	if (currentActiveElement) {

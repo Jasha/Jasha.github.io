@@ -101,7 +101,6 @@
 		left: calc(50% - #{($main-planet-size / 2)});
 		position: absolute;
 		top: calc(50% - #{($main-planet-size / 2)});
-		transition: left 0.5s linear, top 0.5s linear;
 		width: $main-planet-size;
 
 		.planet-title {
